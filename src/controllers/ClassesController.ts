@@ -32,7 +32,7 @@ export default class ClassesController {
           .whereRaw('`class_schedule`.`to` > ??', [timeInMinutes])
       })
       .where('classes.subject', '=', subject)
-      .join('users', 'classes.user_id', '=', 'user_id')
+      .join('users', 'classes.user_id', '=', 'users.id')
       .select(['classes.*', 'users.*']);
 
     res.json(classes);
@@ -86,8 +86,10 @@ export default class ClassesController {
       res.status(201).json({ message: 'inserido com sucesso' });
 
     } catch (err) {
+      trx.destroy();
       return res.status(400).json({
         error: "unxpected error while creating new class"
+
       })
     }
   }
